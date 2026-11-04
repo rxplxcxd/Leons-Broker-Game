@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="description" content="CyberBroker – Immersiver Aktienhandel-Simulator mit Bot-Ligen" />
+
+  <!-- PWA / iOS Meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CyberBroker" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="msapplication-TileColor" content="#0d1117" />
+
+  <!-- Apple Splash Screens -->
+  <link rel="apple-touch-startup-image" href="icons/icon-512.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png" />
+
+  <title>CyberBroker</title>
+
+  <!-- External CDN -->
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="vendor/lucide.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     BOOT SPLASH
+══════════════════════════════════════════════════ -->
+<div id="boot-splash" class="boot-splash">
+  <div class="boot-logo">
+    <div class="boot-icon">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect width="64" height="64" rx="16" fill="url(#bootGrad)"/>
+        <path d="M12 48 L24 20 L32 36 L40 16 L52 48" stroke="#00ff88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="32" cy="36" r="3" fill="#00ff88"/>
+        <defs>
+          <linearGradient id="bootGrad" x1="0" y1="0" x2="64" y2="64">
+            <stop offset="0%" stop-color="#1a2332"/>
+            <stop offset="100%" stop-color="#0d1117"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <h1 class="boot-title">CYBER<span>BROKER</span></h1>
+    <p class="boot-sub">Advanced Trading Simulator</p>
+  </div>
+  <div class="boot-loader">
+    <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+    <span class="boot-status" id="boot-status">Initialisiere Marktdaten…</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ONBOARDING OVERLAY
+══════════════════════════════════════════════════ -->
+<div id="onboarding" class="onboarding hidden">
+  <div class="onboarding-backdrop"></div>
+  <div class="onboarding-card">
+    <div class="onboarding-progress">
+      <div class="ob-step active" data-step="0"></div>
+      <div class="ob-step" data-step="1"></div>
+      <div class="ob-step" data-step="2"></div>
+      <div class="ob-step" data-step="3"></div>
+      <div class="ob-step" data-step="4"></div>
+    </div>
+    <div class="onboarding-slides">
+      <!-- Slide 0: Willkommen -->
+      <div class="ob-slide active" data-slide="0">
+        <div class="ob-emoji">🚀</div>
+        <h2>Willkommen bei<br/><span class="neon-text">CyberBroker</span></h2>
+        <p>Dein immersiver Aktienhandel-Simulator. Handle virtuelle Aktien, tritt gegen Bots an und beweise dein Trading-Talent – alles ohne echtes Geld zu riskieren.</p>
+        <div class="ob-stat-row">
+          <div class="ob-stat"><span class="value neon-text">100.000$</span><span class="label">Startkapital</span></div>
+          <div class="ob-stat"><span class="value neon-copper">50+</span><span class="label">Aktien</span></div>
+          <div class="ob-stat"><span class="value neon-text">∞</span><span class="label">Strategien</span></div>
+        </div>
+      </div>
+      <!-- Slide 1: Kennzahlen -->
+      <div class="ob-slide" data-slide="1">
+        <div class="ob-emoji">📊</div>
+        <h2>Verstehe die <span class="neon-text">Kennzahlen</span></h2>
+        <div class="ob-metric-list">
+          <div class="ob-metric"><span class="tag">KGV</span><span>Kurs-Gewinn-Verhältnis – bewertet, ob eine Aktie günstig oder teuer ist</span></div>
+          <div class="ob-metric"><span class="tag">Div.rendite</span><span>Ausschüttung in % des Aktienkurses – ideal für passive Einnahmen</span></div>
+          <div class="ob-metric"><span class="tag">Beta</span><span>Volatilität vs. Markt – Beta &gt;1 = riskanter, Beta &lt;1 = defensiv</span></div>
+          <div class="ob-metric"><span class="tag">MarktKap</span><span>Gesamtwert des Unternehmens an der Börse</span></div>
+          <div class="ob-metric"><span class="tag">52W High/Low</span><span>Jahreshöchst- und Tiefstkurs – zeigt Trend-Dynamik</span></div>
+        </div>
+      </div>
+      <!-- Slide 2: Diversifikation -->
+      <div class="ob-slide" data-slide="2">
+        <div class="ob-emoji">⚖️</div>
+        <h2>Risiko & <span class="neon-text">Diversifikation</span></h2>
+        <p>Verteile dein Kapital über verschiedene <strong>Sektoren</strong> und <strong>Regionen</strong>, um das Risiko zu minimieren.</p>
+        <div class="ob-tip-box">
+          <div class="ob-tip">💡 Investiere nie mehr als 20% deines Portfolios in eine einzelne Aktie</div>
+          <div class="ob-tip">💡 Mische Tech, Pharma, Energie und Finanz für Balance</div>
+          <div class="ob-tip">💡 Stop-Loss hilft, Verluste zu begrenzen – nutze ihn!</div>
+        </div>
+        <div class="sector-pie-mini" id="ob-pie"></div>
+      </div>
+      <!-- Slide 3: Ligen & Bots -->
+      <div class="ob-slide" data-slide="3">
+        <div class="ob-emoji">🏆</div>
+        <h2>Ligen & <span class="neon-text">Bot-Rivalen</span></h2>
+        <p>Erstelle private Ligen mit Freunden oder kämpfe gegen KI-Bots verschiedener Schwierigkeiten.</p>
+        <div class="ob-bot-preview">
+          <div class="bot-card-mini conservative"><span class="bot-icon">🛡️</span><span class="bot-name">Dividenden-Bot</span><span class="bot-diff">Leicht</span></div>
+          <div class="bot-card-mini aggressive"><span class="bot-icon">⚡</span><span class="bot-name">Hedgefonds-Bot</span><span class="bot-diff">Mittel</span></div>
+          <div class="bot-card-mini panic"><span class="bot-icon">🌪️</span><span class="bot-name">Panik-Bot</span><span class="bot-diff">Schwer</span></div>
+        </div>
+        <p class="ob-hint">Bots reagieren autonom auf Marktschwankungen – besiege sie alle!</p>
+      </div>
+      <!-- Slide 4: Ready -->
+      <div class="ob-slide" data-slide="4">
+        <div class="ob-emoji">💎</div>
+        <h2>Bereit für den <span class="neon-text">Markt?</span></h2>
+        <p>Dein virtuelles Portfolio wartet. Zeige, ob du das Zeug zum Top-Trader hast. Academy ist jederzeit über das Menü erreichbar.</p>
+        <div class="ob-username-setup">
+          <label>Dein Trader-Name</label>
+          <input type="text" id="ob-username" placeholder="z.B. CryptoWolf_42" maxlength="20" autocomplete="off" />
+        </div>
+        <div class="ob-avatar-pick">
+          <span>Avatar:</span>
+          <div class="avatar-options">
+            <button class="av-btn active" data-av="🦊">🦊</button>
+            <button class="av-btn" data-av="🐺">🐺</button>
+            <button class="av-btn" data-av="🦅">🦅</button>
+            <button class="av-btn" data-av="🐉">🐉</button>
+            <button class="av-btn" data-av="🤖">🤖</button>
+            <button class="av-btn" data-av="👾">👾</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="onboarding-nav">
+      <button class="btn-ghost" id="ob-skip">Überspringen</button>
+      <button class="btn-neon" id="ob-next">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN APP SHELL
+══════════════════════════════════════════════════ -->
+<div id="app" class="app hidden">
+
+  <!-- TOP HEADER -->
+  <header class="app-header glass">
+    <div class="header-left">
+      <div class="app-logo-sm">
+        <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="14" fill="url(#hGrad)"/>
+          <path d="M12 48 L24 20 L32 36 L40 16 L52 48" stroke="#00ff88" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <defs><linearGradient id="hGrad" x1="0" y1="0" x2="64" y2="64"><stop offset="0%" stop-color="#1a2332"/><stop offset="100%" stop-color="#0d1117"/></linearGradient></defs>
+        </svg>
+        <span>CyberBroker</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="market-ticker" id="market-ticker">
+        <span class="ticker-item" id="tick-spx">S&amp;P 500 ▲ 4.521 <em>+0.42%</em></span>
+        <span class="ticker-item" id="tick-ndx">NASDAQ ▲ 15.832 <em>+0.78%</em></span>
+        <span class="ticker-item" id="tick-dax">DAX ▼ 17.421 <em>-0.15%</em></span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="cash-badge">
+        <i data-lucide="wallet" size="14"></i>
+        <span id="header-cash">100.000$</span>
+      </div>
+      <button class="avatar-btn" id="profile-btn" aria-label="Profil">
+        <span id="header-avatar">🦊</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MARKET SENTIMENT BAR -->
+  <div class="sentiment-bar" id="sentiment-bar">
+    <span class="sent-label">Markt-Sentiment:</span>
+    <div class="sent-gauge">
+      <div class="sent-fill" id="sent-fill" style="width:62%"></div>
+    </div>
+    <span class="sent-value" id="sent-value">Bullish 62%</span>
+    <span class="sent-sep">|</span>
+    <span class="sent-fear" id="sent-fear">Fear &amp; Greed: <strong>58</strong></span>
+  </div>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="app-main">
+
+    <!-- ───────────── VIEW: DASHBOARD ───────────── -->
+    <section class="view active" id="view-dashboard">
+      <div class="view-header">
+        <h2>Dashboard</h2>
+        <div class="view-time" id="market-time">🟢 Markt offen</div>
+      </div>
+
+      <!-- Portfolio Summary Card -->
+      <div class="portfolio-hero glass">
+        <div class="ph-top">
+          <div>
+            <span class="ph-label">Gesamtvermögen</span>
+            <div class="ph-value" id="total-value">100.000,00 $</div>
+            <div class="ph-change" id="total-change"><span class="change-badge positive">+0,00 $ (0,00%)</span></div>
+          </div>
+          <div class="ph-ring" id="ph-ring-wrap">
+            <canvas id="alloc-donut" width="100" height="100"></canvas>
+          </div>
+        </div>
+        <div class="ph-stats">
+          <div class="ph-stat"><span class="phs-label">Cash</span><span class="phs-val" id="dash-cash">100.000$</span></div>
+          <div class="ph-stat"><span class="phs-label">Investiert</span><span class="phs-val" id="dash-invested">0$</span></div>
+          <div class="ph-stat"><span class="phs-label">Positionen</span><span class="phs-val" id="dash-positions">0</span></div>
+          <div class="ph-stat"><span class="phs-label">Rendite</span><span class="phs-val" id="dash-return">0,00%</span></div>
+        </div>
+      </div>
+
+      <!-- Mini Charts Row -->
+      <div class="mini-charts-row">
+        <div class="mini-chart-card glass" data-symbol="AAPL">
+          <div class="mc-header"><span class="mc-sym">AAPL</span><span class="mc-chg positive" id="mc-AAPL">+1.2%</span></div>
+          <canvas class="mc-canvas" id="chart-AAPL" height="50"></canvas>
+        </div>
+        <div class="mini-chart-card glass" data-symbol="NVDA">
+          <div class="mc-header"><span class="mc-sym">NVDA</span><span class="mc-chg positive" id="mc-NVDA">+2.8%</span></div>
+          <canvas class="mc-canvas" id="chart-NVDA" height="50"></canvas>
+        </div>
+        <div class="mini-chart-card glass" data-symbol="TSLA">
+          <div class="mc-header"><span class="mc-sym">TSLA</span><span class="mc-chg negative" id="mc-TSLA">-1.4%</span></div>
+          <canvas class="mc-canvas" id="chart-TSLA" height="50"></canvas>
+        </div>
+        <div class="mini-chart-card glass" data-symbol="MSFT">
+          <div class="mc-header"><span class="mc-sym">MSFT</span><span class="mc-chg positive" id="mc-MSFT">+0.9%</span></div>
+          <canvas class="mc-canvas" id="chart-MSFT" height="50"></canvas>
+        </div>
+      </div>
+
+      <!-- Community Section -->
+      <div class="community-section">
+        <h3 class="section-title"><i data-lucide="trending-up" size="16"></i> Community Insights</h3>
+        <div class="community-tabs">
+          <button class="ctab active" data-tab="top-picks">Top Picks</button>
+          <button class="ctab" data-tab="top-earner">Top Earner</button>
+          <button class="ctab" data-tab="top-exposed">Top Exposed</button>
+        </div>
+        <div class="community-content" id="community-content">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- News Feed -->
+      <div class="news-feed">
+        <h3 class="section-title"><i data-lucide="newspaper" size="16"></i> Markt-News</h3>
+        <div id="news-list" class="news-list"><!-- filled by JS --></div>
+      </div>
+    </section>
+
+    <!-- ───────────── VIEW: MARKET ───────────── -->
+    <section class="view" id="view-market">
+      <div class="view-header">
+        <h2>Markt</h2>
+        <div class="market-filter-row">
+          <button class="filter-btn active" data-filter="all">Alle</button>
+          <button class="filter-btn" data-filter="tech">Tech</button>
+          <button class="filter-btn" data-filter="health">Health</button>
+          <button class="filter-btn" data-filter="energy">Energie</button>
+          <button class="filter-btn" data-filter="finance">Finanz</button>
+          <button class="filter-btn" data-filter="consumer">Konsum</button>
+        </div>
+      </div>
+      <div class="market-search-wrap">
+        <i data-lucide="search" size="16"></i>
+        <input type="search" id="market-search" placeholder="Aktie suchen…" autocomplete="off" />
+      </div>
+      <div class="market-sort-row">
+        <span>Sortieren:</span>
+        <button class="sort-btn active" data-sort="name">Name</button>
+        <button class="sort-btn" data-sort="price">Kurs</button>
+        <button class="sort-btn" data-sort="change">Änderung</button>
+        <button class="sort-btn" data-sort="market_cap">MarktKap</button>
+      </div>
+      <div id="stock-list" class="stock-list"><!-- filled by JS --></div>
+    </section>
+
+    <!-- ───────────── VIEW: PORTFOLIO ───────────── -->
+    <section class="view" id="view-portfolio">
+      <div class="view-header">
+        <h2>Mein Portfolio</h2>
+        <button class="btn-sm-neon" id="rebalance-btn"><i data-lucide="sliders-horizontal" size="14"></i> Rebalancing</button>
+      </div>
+
+      <!-- Portfolio Performance Chart -->
+      <div class="glass chart-card-big">
+        <div class="ccb-header">
+          <span>Portfolio-Entwicklung</span>
+          <div class="time-range-btns">
+            <button class="trb active" data-range="1d">1T</button>
+            <button class="trb" data-range="1w">1W</button>
+            <button class="trb" data-range="1m">1M</button>
+            <button class="trb" data-range="3m">3M</button>
+          </div>
+        </div>
+        <canvas id="portfolio-chart" height="150"></canvas>
+      </div>
+
+      <!-- Holdings -->
+      <div class="holdings-section">
+        <h3 class="section-title"><i data-lucide="briefcase" size="16"></i> Positionen</h3>
+        <div id="holdings-list" class="holdings-list">
+          <div class="empty-state"><i data-lucide="inbox" size="32"></i><p>Noch keine Positionen.<br/>Kaufe deine erste Aktie!</p></div>
+        </div>
+      </div>
+
+      <!-- Allocation Breakdown -->
+      <div class="allocation-section glass">
+        <h3 class="section-title"><i data-lucide="pie-chart" size="16"></i> Sektor-Allokation</h3>
+        <canvas id="sector-chart" height="180"></canvas>
+        <div id="sector-legend" class="sector-legend"></div>
+      </div>
+    </section>
+
+    <!-- ───────────── VIEW: LEAGUES ───────────── -->
+    <section class="view" id="view-leagues">
+      <div class="view-header">
+        <h2>Ligen</h2>
+        <button class="btn-sm-neon" id="create-league-btn"><i data-lucide="plus" size="14"></i> Neue Liga</button>
+      </div>
+
+      <!-- Active League Banner -->
+      <div id="active-league-banner" class="active-league-banner glass hidden"><!-- filled by JS --></div>
+
+      <!-- League Tabs -->
+      <div class="league-tabs">
+        <button class="ltab active" data-ltab="my-leagues">Meine Ligen</button>
+        <button class="ltab" data-ltab="bot-leagues">Bot-Ligen</button>
+        <button class="ltab" data-ltab="public">Öffentlich</button>
+      </div>
+      <div id="leagues-content" class="leagues-content"><!-- filled by JS --></div>
+    </section>
+
+    <!-- ───────────── VIEW: ACADEMY ───────────── -->
+    <section class="view" id="view-academy">
+      <div class="view-header">
+        <h2>Academy</h2>
+        <span class="badge-xp" id="xp-badge">XP: 0</span>
+      </div>
+      <div class="academy-grid" id="academy-grid"><!-- filled by JS --></div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav glass">
+    <button class="nav-btn active" data-view="dashboard" aria-label="Dashboard">
+      <i data-lucide="layout-dashboard" size="22"></i>
+      <span>Dashboard</span>
+    </button>
+    <button class="nav-btn" data-view="market" aria-label="Markt">
+      <i data-lucide="bar-chart-2" size="22"></i>
+      <span>Markt</span>
+    </button>
+    <button class="nav-btn" data-view="portfolio" aria-label="Portfolio">
+      <i data-lucide="briefcase" size="22"></i>
+      <span>Portfolio</span>
+    </button>
+    <button class="nav-btn" data-view="leagues" aria-label="Ligen">
+      <i data-lucide="trophy" size="22"></i>
+      <span>Ligen</span>
+    </button>
+    <button class="nav-btn" data-view="academy" aria-label="Academy">
+      <i data-lucide="graduation-cap" size="22"></i>
+      <span>Academy</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MODALS & OVERLAYS
+══════════════════════════════════════════════════ -->
+
+<!-- Stock Detail Modal -->
+<div id="stock-modal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" id="sm-backdrop"></div>
+  <div class="modal-sheet glass">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <div class="sm-title">
+        <span class="sm-sym" id="sm-sym">AAPL</span>
+        <span class="sm-name" id="sm-name">Apple Inc.</span>
+      </div>
+      <button class="modal-close" id="sm-close" aria-label="Schließen"><i data-lucide="x" size="20"></i></button>
+    </div>
+
+    <!-- Price & Chart -->
+    <div class="sm-price-row">
+      <div class="sm-price" id="sm-price">0,00 $</div>
+      <div class="sm-change" id="sm-change">+0,00 (0,00%)</div>
+    </div>
+    <div class="sm-chart-wrap">
+      <div class="sm-chart-tabs">
+        <button class="sct active" data-p="1d">1T</button>
+        <button class="sct" data-p="1w">1W</button>
+        <button class="sct" data-p="1m">1M</button>
+        <button class="sct" data-p="3m">3M</button>
+        <button class="sct" data-p="1y">1J</button>
+      </div>
+      <canvas id="sm-chart" height="140"></canvas>
+    </div>
+
+    <!-- Analyst Rating Bar -->
+    <div class="analyst-bar">
+      <div class="ab-label">Analysten</div>
+      <div class="ab-track">
+        <div class="ab-buy" id="ab-buy"></div>
+        <div class="ab-hold" id="ab-hold"></div>
+        <div class="ab-sell" id="ab-sell"></div>
+      </div>
+      <div class="ab-legend">
+        <span class="buy">■ Kaufen</span><span class="hold">■ Halten</span><span class="sell">■ Verkaufen</span>
+      </div>
+    </div>
+
+    <!-- Fundamental Metrics Grid -->
+    <div class="metrics-grid" id="sm-metrics"><!-- filled by JS --></div>
+
+    <!-- Order Panel -->
+    <div class="order-panel glass">
+      <div class="op-tabs">
+        <button class="op-tab active" data-ot="buy">Kaufen</button>
+        <button class="op-tab" data-ot="sell">Verkaufen</button>
+      </div>
+      <div class="op-order-type">
+        <select id="op-type">
+          <option value="market">Market Order</option>
+          <option value="limit">Limit Order</option>
+          <option value="stop">Stop-Loss</option>
+        </select>
+      </div>
+      <div class="op-limit-row hidden" id="op-limit-row">
+        <label>Limit-Preis ($)</label>
+        <input type="number" id="op-limit-price" step="0.01" placeholder="0.00" />
+      </div>
+      <div class="op-shares-row">
+        <label>Anteile</label>
+        <div class="shares-input-wrap">
+          <button class="shares-btn" id="shares-minus">−</button>
+          <input type="number" id="op-shares" value="1" min="1" />
+          <button class="shares-btn" id="shares-plus">+</button>
+        </div>
+        <div class="op-quick-pct">
+          <button class="qp-btn" data-pct="25">25%</button>
+          <button class="qp-btn" data-pct="50">50%</button>
+          <button class="qp-btn" data-pct="75">75%</button>
+          <button class="qp-btn" data-pct="100">MAX</button>
+        </div>
+      </div>
+      <div class="op-summary">
+        <div class="ops-row"><span>Kurs</span><span id="op-unit-price">0,00 $</span></div>
+        <div class="ops-row"><span>Gesamt</span><span id="op-total">0,00 $</span></div>
+        <div class="ops-row"><span>Verfügbar</span><span id="op-available">100.000,00 $</span></div>
+      </div>
+      <button class="btn-neon full-width" id="op-execute">Kaufen</button>
+    </div>
+
+    <!-- Stop-Loss Config -->
+    <div class="stop-loss-section" id="stop-loss-section">
+      <div class="sls-toggle"><input type="checkbox" id="sl-enable" /><label for="sl-enable">Stop-Loss aktivieren</label></div>
+      <div class="sl-controls hidden" id="sl-controls">
+        <label>Stop bei Verlust von <span id="sl-pct-label">10</span>%</label>
+        <input type="range" id="sl-range" min="1" max="50" value="10" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- League Create Modal -->
+<div id="league-modal" class="modal hidden">
+  <div class="modal-backdrop" id="lm-backdrop"></div>
+  <div class="modal-sheet glass">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h3>Neue Liga erstellen</h3>
+      <button class="modal-close" id="lm-close"><i data-lucide="x" size="20"></i></button>
+    </div>
+    <div class="league-form">
+      <label>Liga-Name</label>
+      <input type="text" id="lf-name" placeholder="z.B. Wall Street Warriors" maxlength="30" />
+
+      <label>Liga-Typ</label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="ltype" value="private" checked /> 🔒 Privat (Einladung)</label>
+        <label class="radio-opt"><input type="radio" name="ltype" value="public" /> 🌐 Öffentlich</label>
+        <label class="radio-opt"><input type="radio" name="ltype" value="bot" /> 🤖 Bot-Liga</label>
+      </div>
+
+      <div id="bot-config" class="bot-config hidden">
+        <label>Bots auswählen (mehrere möglich)</label>
+        <div class="bot-select-grid" id="bot-select-grid"><!-- filled by JS --></div>
+      </div>
+
+      <label>Laufzeit</label>
+      <select id="lf-duration">
+        <option value="7">1 Woche</option>
+        <option value="30" selected>1 Monat</option>
+        <option value="90">3 Monate</option>
+        <option value="365">1 Jahr</option>
+      </select>
+
+      <label>Startkapital pro Spieler</label>
+      <select id="lf-capital">
+        <option value="10000">10.000 $</option>
+        <option value="50000">50.000 $</option>
+        <option value="100000" selected>100.000 $</option>
+        <option value="1000000">1.000.000 $</option>
+      </select>
+
+      <!-- Stakes Modus -->
+      <div class="stakes-toggle-row">
+        <label class="toggle-label"><input type="checkbox" id="stakes-enable" /> 💰 Stakes-Modus aktivieren</label>
+      </div>
+      <div id="stakes-config" class="stakes-config hidden">
+        <label>Einsatz pro Person (€)</label>
+        <input type="number" id="stakes-amount" value="5" min="1" max="100" />
+        <div class="stakes-info" id="stakes-info">Pott bei 6 Spielern: 30 €</div>
+      </div>
+
+      <button class="btn-neon full-width" id="lf-create">Liga erstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- League Detail Modal -->
+<div id="league-detail-modal" class="modal hidden">
+  <div class="modal-backdrop" id="ldm-backdrop"></div>
+  <div class="modal-sheet glass">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h3 id="ldm-title">Liga-Details</h3>
+      <button class="modal-close" id="ldm-close"><i data-lucide="x" size="20"></i></button>
+    </div>
+    <div id="ldm-content"><!-- filled by JS --></div>
+  </div>
+</div>
+
+<!-- Rebalancing Modal -->
+<div id="rebalance-modal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-sheet glass">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h3>Portfolio Rebalancing</h3>
+      <button class="modal-close" id="rb-close"><i data-lucide="x" size="20"></i></button>
+    </div>
+    <div id="rebalance-content"><!-- filled by JS --></div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal hidden">
+  <div class="modal-backdrop" id="pm-backdrop"></div>
+  <div class="modal-sheet glass">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h3>Mein Profil</h3>
+      <button class="modal-close" id="pm-close"><i data-lucide="x" size="20"></i></button>
+    </div>
+    <div id="profile-content"><!-- filled by JS --></div>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<!-- Scripts -->
+<script src="app.js"></script>
+</body>
+</html>

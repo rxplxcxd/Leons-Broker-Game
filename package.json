@@ -1,0 +1,21 @@
+{
+  "name": "cyberbroker-pwa",
+  "version": "1.0.0",
+  "description": "CyberBroker – Advanced Stock Trading Simulator PWA",
+  "private": true,
+  "scripts": {
+    "start": "npx serve . -l 3000",
+    "dev": "npx serve . -l 3000 --no-clipboard",
+    "build": "echo 'Static PWA – no build step required'",
+    "lint": "echo 'No linter configured'"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["pwa", "trading", "simulator", "stocks", "game"],
+  "author": "CyberBroker Team",
+  "license": "MIT"
+}
