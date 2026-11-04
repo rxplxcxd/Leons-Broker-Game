@@ -1,5 +1,5 @@
 // Vercel Serverless: echte Kurse von Yahoo Finance (kein API-Key nötig)
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const syms = String(req.query.symbols || '').split(',').filter(Boolean).slice(0, 60);
   const out = {};
   await Promise.all(syms.map(async sym => {

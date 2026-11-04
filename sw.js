@@ -1,5 +1,5 @@
 // CyberBroker Service Worker v1.0
-const CACHE_NAME = 'cyberbroker-v2';
+const CACHE_NAME = 'cyberbroker-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
